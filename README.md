@@ -1,1 +1,1 @@
-ingresso-watcher
+ingressoWatcher
