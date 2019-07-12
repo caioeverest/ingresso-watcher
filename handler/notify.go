@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/caioeverest/ingressoWatcher/service"
+	"github.com/caioeverest/ingresso-watcher/service"
 	"github.com/gin-gonic/gin"
 )
 

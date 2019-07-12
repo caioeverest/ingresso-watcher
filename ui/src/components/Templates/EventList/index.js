@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import PropTypes from 'prop-types'
 import MaterialTable from 'material-table';
 import { AddBox,
     ArrowUpward,
@@ -46,42 +47,45 @@ class EventList extends React.Component {
                 { title: 'Id', field: 'id' },
                 { title: 'Nome', field: 'name' },
             ],
-            data: [
-                {id: '12344', name: 'test'},
-            ],
+			data: [],
         }
     }
 
-    componentDidMount() {
-       console.log("test")
-    }
+    componentDidMount = () => this.props.getInit()
+        .then(data => this.setState({...this.state, data}))
 
-    onRowAdd = newData => new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
+    onRowAdd = newData => this.props.onRowAdd(newData)
+        .then(() => {
             const { data } = this.state;
             data.push(newData);
-            this.setState({ ...this.state, data });
-        }, 600);
-    })
+			this.setState({ ...this.state, data });
+		})
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
-    onRowUpdate = (newData, oldData) => new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
+    onRowUpdate = (newData, oldData) => this.props.onRowUpdate(newData, oldData)
+        .then(() => {
             const { data } = this.state;
             data[data.indexOf(oldData)] = newData;
             this.setState({ ...this.state, data });
-        }, 600);
-    })
+        })
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
-    onRowDelete = oldData => new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
+    onRowDelete = oldData => this.props.onRowDelete(oldData)
+        .then(() => {
             const { data } = this.state;
             data.splice(data.indexOf(oldData), 1);
             this.setState({ ...this.state, data });
-        }, 600);
-    })
+        })
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
     render() {
         const { data, columns } = this.state
@@ -99,6 +103,13 @@ class EventList extends React.Component {
             />
         );
     }
+}
+
+EventList.propTypes = {
+    onRowAdd: PropTypes.func,
+    onRowUpdate: PropTypes.func,
+    onRowDelete: PropTypes.func,
+    getInit: PropTypes.func,
 }
 
 export default EventList

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/caioeverest/ingressoWatcher/config"
+	"github.com/caioeverest/ingresso-watcher/config"
 )
 
 func GetEventById(conf *config.Config, id string) ([]interface{}, error) {

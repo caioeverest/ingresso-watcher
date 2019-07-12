@@ -1,5 +1,5 @@
 import React from 'react';
-import Template from '../../Templates/ContactList';
+import Template from '../../Templates/EventList';
 import Snackbar from '../../Atoms/Snackbar';
 import Styled from 'styled-components';
 import { Box, Container } from '@material-ui/core';
@@ -14,7 +14,7 @@ const Content = Styled(Box)`
     padding: 5;
 `
 
-class ContactList extends React.Component {
+class EventList extends React.Component {
 
     constructor(props) {
 		super(props)
@@ -51,7 +51,7 @@ class ContactList extends React.Component {
 			throw error
 		})
 
-	onRowDelete = oldData => clear(oldData.phone)
+	onRowDelete = oldData => clear(oldData.id)
 		.then(response => this.showSnack(response, 'success'))
 		.catch(error => {
 			this.showSnack(error.toString(), 'error')
@@ -69,7 +69,7 @@ class ContactList extends React.Component {
 				/>
 				<Container maxWidth="lg">
 					<Template
-						onRowAdd={newData => this.onRowAdd(newData)}
+						onRowAdd={this.onRowAdd}
 						onRowUpdate={this.onRowUpdate}
 						onRowDelete={this.onRowDelete}
                         getInit={getAll}
@@ -80,4 +80,4 @@ class ContactList extends React.Component {
     }
 }
 
-export default ContactList
+export default EventList

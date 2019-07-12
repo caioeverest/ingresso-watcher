@@ -3,8 +3,8 @@ package service
 import (
 	"log"
 
-	"github.com/caioeverest/ingressoWatcher/client"
-	"github.com/caioeverest/ingressoWatcher/service/templates"
+	"github.com/caioeverest/ingresso-watcher/client"
+	"github.com/caioeverest/ingresso-watcher/service/templates"
 )
 
 func SendTestMessage(wpp client.WhatsAppInterface, phone string) error {

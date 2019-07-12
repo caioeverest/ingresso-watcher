@@ -1,6 +1,6 @@
 package client
 
-import "github.com/caioeverest/ingressoWatcher/config"
+import "github.com/caioeverest/ingresso-watcher/config"
 
 type IrInterface interface {
 	GetEventById(conf *config.Config, id string) ([]map[string]interface{}, error)

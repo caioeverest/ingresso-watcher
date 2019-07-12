@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/caioeverest/ingressoWatcher/service"
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/service"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *BaseHandler) CreateContact(c *gin.Context) {
-	var body service.PostContactBody
+	var body service.ContactBody
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
@@ -19,7 +19,7 @@ func (h *BaseHandler) CreateContact(c *gin.Context) {
 		return
 	}
 
-	service.AddNewContact(h.ContactDB, body)
+	service.AddNewContact(h.ContactDB, body, h.WppClient)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,

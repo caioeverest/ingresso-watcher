@@ -3,8 +3,8 @@ package service
 import (
 	"testing"
 
-	"github.com/caioeverest/ingressoWatcher/repository"
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/repository"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 )
 
 func TestEventService(t *testing.T) {
@@ -12,39 +12,39 @@ func TestEventService(t *testing.T) {
 
 	for _, tc := range []struct {
 		Scenario string
-		Create	PostEventBody
-		Patch	PostEventBody
-		Delete	bool
-		Expect	PostEventBody
-	} {
+		Create   EventBody
+		Patch    EventBody
+		Delete   bool
+		Expect   EventBody
+	}{
 		{
-			Scenario: 	"Shoud create and recover an event",
-			Create: 	PostEventBody{"4321", "Show of Teste"},
-			Expect: 	PostEventBody{"4321", "Show of Teste"},
+			Scenario: "Shoud create and recover an event",
+			Create:   EventBody{"4321", "Show of Teste"},
+			Expect:   EventBody{"4321", "Show of Teste"},
 		},
 		{
-			Scenario: 	"Shoud create and delete an event",
-			Create: 	PostEventBody{"4321", "Show of Teste"},
-			Delete: 	true,
-			Expect: 	PostEventBody{},
+			Scenario: "Shoud create and delete an event",
+			Create:   EventBody{"4321", "Show of Teste"},
+			Delete:   true,
+			Expect:   EventBody{},
 		},
 		{
-			Scenario: 	"Shoud create, patch and recover an event",
-			Create: 	PostEventBody{"4321", "Show of Teste"},
-			Patch: 		PostEventBody{"4321", "Test's show"},
-			Expect: 	PostEventBody{"4321", "Test's show"},
+			Scenario: "Shoud create, patch and recover an event",
+			Create:   EventBody{"4321", "Show of Teste"},
+			Patch:    EventBody{"4321", "Test's show"},
+			Expect:   EventBody{"4321", "Test's show"},
 		},
 		{
-			Scenario: 	"Shoud create, patch, delete an event",
-			Create: 	PostEventBody{"4321", "Show of Teste"},
-			Patch: 		PostEventBody{"4321", "Test's show"},
-			Delete: 	true,
-			Expect: 	PostEventBody{},
+			Scenario: "Shoud create, patch, delete an event",
+			Create:   EventBody{"4321", "Show of Teste"},
+			Patch:    EventBody{"4321", "Test's show"},
+			Delete:   true,
+			Expect:   EventBody{},
 		},
 	} {
 		t.Run(tc.Scenario, func(t *testing.T) {
 			SaveNewEvent(mockDB, tc.Create)
-			if tc.Patch != (PostEventBody{}) {
+			if tc.Patch != (EventBody{}) {
 				if err := UpdateEvent(mockDB, tc.Patch.Id, tc.Patch.Name); err != nil {
 					t.Errorf(err.Error())
 				}
@@ -56,7 +56,7 @@ func TestEventService(t *testing.T) {
 				}
 			}
 			name, err := GetEventById(mockDB, tc.Create.Id)
-			if err != nil && (tc.Expect == (PostEventBody{}) && err != errors.EventNotFound) {
+			if err != nil && (tc.Expect == (EventBody{}) && err != errors.EventNotFound) {
 				t.Errorf(err.Error())
 			}
 			if name != tc.Expect.Name {

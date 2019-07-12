@@ -47,16 +47,23 @@ class ContactList extends React.Component {
                 { title: 'Numero', field: 'phone' },
                 { title: 'Nome', field: 'name' },
             ],
-            data: this.props.data || [],
+            data: [],
         }
     }
+
+    componentDidMount = () => this.props.getInit()
+        .then(data => this.setState({...this.state, data}))
 
     onRowAdd = newData => this.props.onRowAdd(newData)
         .then(() => {
             const { data } = this.state;
             data.push(newData);
-            this.setState({ ...this.state, data });
-        })
+			this.setState({ ...this.state, data });
+		})
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
     onRowUpdate = (newData, oldData) => this.props.onRowUpdate(newData, oldData)
         .then(() => {
@@ -64,6 +71,10 @@ class ContactList extends React.Component {
             data[data.indexOf(oldData)] = newData;
             this.setState({ ...this.state, data });
         })
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
     onRowDelete = oldData => this.props.onRowDelete(oldData)
         .then(() => {
@@ -71,9 +82,13 @@ class ContactList extends React.Component {
             data.splice(data.indexOf(oldData), 1);
             this.setState({ ...this.state, data });
         })
+		.catch(() => {
+			const { data } = this.state;
+			this.setState({ ...this.state, data  });
+		})
 
     render() {
-        const { data, columns, errorMessage } = this.state
+        const { data, columns } = this.state
         return (
             <MaterialTable
                 title="Lista de contatos"
@@ -94,7 +109,7 @@ ContactList.propTypes = {
     onRowAdd: PropTypes.func,
     onRowUpdate: PropTypes.func,
     onRowDelete: PropTypes.func,
-    data: PropTypes.array,
+    getInit: PropTypes.func,
 }
 
 export default ContactList

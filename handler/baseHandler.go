@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/caioeverest/ingressoWatcher/client"
-	"github.com/caioeverest/ingressoWatcher/config"
-	"github.com/caioeverest/ingressoWatcher/repository"
+	"github.com/caioeverest/ingresso-watcher/client"
+	"github.com/caioeverest/ingresso-watcher/config"
+	"github.com/caioeverest/ingresso-watcher/repository"
 )
 
 type BaseHandler struct {

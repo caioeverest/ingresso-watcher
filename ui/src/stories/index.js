@@ -8,11 +8,12 @@ import { withKnobs, text, number, select, boolean } from '@storybook/addon-knobs
 import Snackbar from '../components/Atoms/Snackbar';
 
 //Templates
-import EventList from '../components/Templates/EventList';
-import ContactList from '../components/Templates/ContactList';
+import EventListTemplate from '../components/Templates/EventList';
+import ContactListTemplate from '../components/Templates/ContactList';
 
 //Pages
-/*TODO*/
+import ContactListPage from '../components/Pages/ContactList';
+import EventListPage from '../components/Pages/EventList';
 
 storiesOf('Atoms', module)
     .addDecorator(withKnobs)
@@ -28,9 +29,9 @@ storiesOf('Atoms', module)
     />);
 
 storiesOf('Templates', module)
-    .add('EventList', () => <EventList />)
-    .add('ContactList', () => <ContactList name="test"/>);
+    .add('EventListTemplate', () => <EventListTemplate />)
+    .add('ContactListTemplate', () => <ContactListTemplate />);
 
 storiesOf('Pages', module)
-    .add('EventList', () => <EventList />)
-    .add('ContactList', () => <ContactList name="test"/>);
+    .add('ContactListPage', () => <ContactListPage />)
+    .add('EventListPage', () => <EventListPage />);

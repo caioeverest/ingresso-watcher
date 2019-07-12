@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/caioeverest/ingressoWatcher/service"
 	"log"
 
-	"github.com/caioeverest/ingressoWatcher/client"
-	"github.com/caioeverest/ingressoWatcher/config"
-	"github.com/caioeverest/ingressoWatcher/handler"
-	"github.com/caioeverest/ingressoWatcher/repository"
+	"github.com/caioeverest/ingresso-watcher/service"
+
+	"github.com/caioeverest/ingresso-watcher/client"
+	"github.com/caioeverest/ingresso-watcher/config"
+	"github.com/caioeverest/ingresso-watcher/handler"
+	"github.com/caioeverest/ingresso-watcher/repository"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,6 +27,12 @@ func main() {
 
 	h := handler.SetHandlers(conf, whatsapp, contactDb, eventDb)
 	app := gin.Default()
+
+	app.Use(static.Serve("/", static.LocalFile("./ui/build", true)))
+
+	app.Use(static.Serve("/contatos", static.LocalFile("./ui/build", true)))
+
+	app.NoRoute(static.Serve("/", static.LocalFile("./ui/build", true)))
 
 	api := app.Group("/api")
 	{

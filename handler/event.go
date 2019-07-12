@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/caioeverest/ingressoWatcher/service"
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/service"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *BaseHandler) CreateEvent(c *gin.Context) {
-	var body service.PostEventBody
+	var body service.EventBody
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,

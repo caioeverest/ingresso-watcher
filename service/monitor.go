@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/caioeverest/ingressoWatcher/client"
-	"github.com/caioeverest/ingressoWatcher/config"
-	"github.com/caioeverest/ingressoWatcher/repository"
+	"github.com/caioeverest/ingresso-watcher/client"
+	"github.com/caioeverest/ingresso-watcher/config"
+	"github.com/caioeverest/ingresso-watcher/repository"
 	"github.com/jasonlvhit/gocron"
 )
 
@@ -21,14 +21,14 @@ func Monitor(contactList, eventList repository.Interface,
 func monitorDeEventos(contactList, eventList repository.Interface, whatsapp client.WhatsAppInterface, conf *config.Config) {
 	events := GetAllRegistredEvents(eventList)
 
-	for eventId, eventName := range events {
-		_, err := CheckIfHaveTickets(conf, eventId)
+	for _, event := range events {
+		_, err := CheckIfHaveTickets(conf, event.Id)
 		if err == nil {
 			contacts := GetContactList(contactList)
-			url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s-1", eventId)
-			for phone, name := range contacts {
-				if err := SendFoundTicketMessage(whatsapp, phone, name, eventName, url); err != nil {
-					log.Printf("Ocorreu um erro %s ao enviar a notificação para %s - %s", err, phone, name)
+			url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s-1", event.Id)
+			for _, contact := range contacts {
+				if err := SendFoundTicketMessage(whatsapp, contact.Phone, contact.Name, event.Name, url); err != nil {
+					log.Printf("Ocorreu um erro %s ao enviar a notificação para %s - %s", err, contact.Phone, contact.Name)
 				}
 			}
 		}

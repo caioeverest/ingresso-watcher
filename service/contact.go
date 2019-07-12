@@ -3,18 +3,21 @@ package service
 import (
 	"log"
 
-	"github.com/caioeverest/ingressoWatcher/repository"
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/client"
+
+	"github.com/caioeverest/ingresso-watcher/repository"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 )
 
-type PostContactBody struct {
+type ContactBody struct {
 	Phone string `json:"phone"`
 	Name  string `json:"name"`
 }
 
-func AddNewContact(r repository.Interface, contact PostContactBody) {
+func AddNewContact(r repository.Interface, contact ContactBody, wpp client.WhatsAppInterface) {
 	log.Printf("Salvando contato de %s", contact.Name)
 	r.Set(contact.Phone, contact.Name)
+	_ = SendGreetingsMessage(wpp, contact.Phone, contact.Name)
 }
 
 func ChangeContactName(r repository.Interface, phone, newName string) error {
@@ -38,9 +41,13 @@ func GetContactByNumber(r repository.Interface, phone string) (string, error) {
 	return name, nil
 }
 
-func GetContactList(r repository.Interface) map[string]string {
-	contacts := r.GetAll()
-	log.Printf("Foram encontrados %d contatos na lista", len(contacts))
+func GetContactList(r repository.Interface) []ContactBody {
+	rawContacts := r.GetAll()
+	var contacts []ContactBody
+	for phone, name := range rawContacts {
+		contact := ContactBody{phone, name}
+		contacts = append(contacts, contact)
+	}
 	return contacts
 }
 

@@ -3,7 +3,7 @@ package repository
 import (
 	"sync"
 
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 )
 
 type Memory struct {

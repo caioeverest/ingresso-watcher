@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"text/template"
 
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 )
 
 func FormatMessage(templateType string, params map[string]string) (string, error) {

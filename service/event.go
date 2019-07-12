@@ -5,13 +5,13 @@ import (
 	"log"
 	"time"
 
-	"github.com/caioeverest/ingressoWatcher/client"
-	"github.com/caioeverest/ingressoWatcher/config"
-	"github.com/caioeverest/ingressoWatcher/repository"
-	"github.com/caioeverest/ingressoWatcher/service/errors"
+	"github.com/caioeverest/ingresso-watcher/client"
+	"github.com/caioeverest/ingresso-watcher/config"
+	"github.com/caioeverest/ingresso-watcher/repository"
+	"github.com/caioeverest/ingresso-watcher/service/errors"
 )
 
-type PostEventBody struct {
+type EventBody struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
@@ -23,7 +23,7 @@ type BaseDataFromEventResponse struct {
 	Date        time.Time `json:"date"`
 }
 
-func SaveNewEvent(r repository.Interface, event PostEventBody) {
+func SaveNewEvent(r repository.Interface, event EventBody) {
 	log.Printf("Salvando evento %s", event.Name)
 	r.Set(event.Id, event.Name)
 }
@@ -45,12 +45,18 @@ func GetEventById(r repository.Interface, id string) (string, error) {
 		log.Print("Evento não encontrado")
 		return "", errors.EventNotFound
 	}
+
 	log.Printf("Evento %s encontrado", event)
 	return event, nil
 }
 
-func GetAllRegistredEvents(r repository.Interface) map[string]string {
-	events := r.GetAll()
+func GetAllRegistredEvents(r repository.Interface) []EventBody {
+	rawEvents := r.GetAll()
+	var events []EventBody
+	for id, name := range rawEvents {
+		event := EventBody{id, name}
+		events = append(events, event)
+	}
 	return events
 }
 
@@ -63,7 +69,7 @@ func StopWatchEvent(r repository.Interface, id string) error {
 	return nil
 }
 
-func TestEvent(conf *config.Config,id string) ([]BaseDataFromEventResponse, error) {
+func TestEvent(conf *config.Config, id string) ([]BaseDataFromEventResponse, error) {
 	events, err := client.GetEventById(conf, id)
 	if err != nil {
 		return nil, err
@@ -94,7 +100,7 @@ func TestEvent(conf *config.Config,id string) ([]BaseDataFromEventResponse, erro
 	return res, nil
 }
 
-func CheckIfHaveTickets(conf *config.Config,id string) (map[string]string, error) {
+func CheckIfHaveTickets(conf *config.Config, id string) (map[string]string, error) {
 	events, err := client.GetEventById(conf, id)
 	if err != nil {
 		log.Print(err)
