@@ -14,7 +14,7 @@ func (h *BaseHandler) CreateEvent(c *gin.Context) {
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
-			"message": "Body does not match",
+			"message": "Corpo da requisição inválido",
 		})
 		return
 	}
@@ -23,7 +23,7 @@ func (h *BaseHandler) CreateEvent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "Event created",
+		"message": "Evento criado!",
 	})
 }
 
@@ -59,12 +59,12 @@ func (h *BaseHandler) GetEventById(c *gin.Context) {
 }
 
 func (h *BaseHandler) UpdateEvent(c *gin.Context) {
-	newName := c.GetString("new_name")
+	newName := c.Query("new_name")
 	id := c.Param("id")
 	if newName == "" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
-			"message": "empty field \"new_name\"",
+			"message": "Campo \"new_name\" veio vazio",
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func (h *BaseHandler) UpdateEvent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": fmt.Sprintf("Event name changed to %s", newName),
+		"message": fmt.Sprintf("Nome do evento alterado para: %s", newName),
 	})
 }
 
@@ -114,7 +114,7 @@ func (h *BaseHandler) DeleteEvent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": fmt.Sprintf("event with id %s deleted!", id),
+		"message": fmt.Sprintf("Evento id %s deletado com sucesso!", id),
 	})
 }
 

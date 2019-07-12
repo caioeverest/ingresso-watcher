@@ -14,7 +14,7 @@ func (h *BaseHandler) CreateContact(c *gin.Context) {
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
-			"message": "Body does not match",
+			"message": "Corpo da requisição inválido",
 		})
 		return
 	}
@@ -23,7 +23,7 @@ func (h *BaseHandler) CreateContact(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": "Contact created with success",
+		"message": "Contato salvo com sucesso!",
 	})
 }
 
@@ -59,12 +59,12 @@ func (h *BaseHandler) GetContactByPhone(c *gin.Context) {
 }
 
 func (h *BaseHandler) UpdateContact(c *gin.Context) {
-	newName := c.GetString("new_name")
+	newName := c.Query("new_name")
 	phone := c.Param("phone")
 	if newName == "" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"code":    http.StatusBadRequest,
-			"message": "empty field \"new_name\"",
+			"message": "Campo \"new_name\" veio vazio",
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func (h *BaseHandler) UpdateContact(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": fmt.Sprintf("Contact changed to name: %s", newName),
+		"message": fmt.Sprintf("Nome do contato alterado para: %s", newName),
 	})
 }
 
@@ -114,6 +114,6 @@ func (h *BaseHandler) DeleteContact(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"message": fmt.Sprintf("deleted contact number %s with success", phone),
+		"message": fmt.Sprintf("Numero %s deletado com sucesso", phone),
 	})
 }
