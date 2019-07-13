@@ -31,7 +31,8 @@ docker:
 release: new-tag release-git release-docker
 
 release-git: 
-	NEW_VERSION := $(shell makeNewTag $(ACTUAL_VERSION) $(TYPE))
+	git add .
+	git commit -m "new release v$(NEW_VERSION)"
 	git tag -a $(NEW_VERSION) -m "release v$(NEW_VERSION)"
 	git push
 
