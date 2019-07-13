@@ -111,7 +111,7 @@ func CheckIfHaveTickets(conf *config.Config, id string) (map[string]string, erro
 
 	for _, i := range events {
 		item := i.(map[string]interface{})
-		qtdAvaiable := item["total_available"].(int)
+		qtdAvaiable := item["total_available"].(float64)
 
 		if qtdAvaiable > 0 {
 			name := item["name"].(string)
