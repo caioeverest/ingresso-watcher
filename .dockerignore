@@ -1,0 +1,8 @@
+*.gob
+*.md
+.DS_Store
+
+.idea/
+.git/
+ui/.storybook/
+
