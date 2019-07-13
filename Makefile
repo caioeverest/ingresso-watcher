@@ -37,7 +37,7 @@ release-git:
 	git push
 
 release-docker:
-	docker build -t $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
+	docker build . -t $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
 	docker push $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
 
 new-tag:
