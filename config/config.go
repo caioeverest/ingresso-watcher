@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Interval uint64
+	HttpPort int
 	ApiKey   string
 }
 
@@ -16,6 +17,12 @@ func InitConfig() *Config {
 	tmpInterval, ok := os.LookupEnv("INTERVAL")
 	if ok {
 		interval, _ = strconv.ParseUint(tmpInterval, 10, 64)
+	}
+
+	HttpPort := 7000
+	tmpHttpPort, ok := os.LookupEnv("HTTP_PORT")
+	if ok {
+		httpPort, _ = strconv.Atoi(tmpHttpPort)
 	}
 
 	apiKey, ok := os.LookupEnv("API_KEY")
