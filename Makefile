@@ -4,17 +4,23 @@ DOCKER_USER=$(shell docker info | sed '/Username:/!d;s/.* //')
 KEY=1234
 
 y=$(subst ., ,$(ACTUAL_VERSION))
-major=$(word 1, $(y))
-minor=$(word 2, $(y))
-patch=$(word 3, $(y))
+tmp_major=$(word 1, $(y))
+tmp_minor=$(word 2, $(y))
+tmp_patch=$(word 3, $(y))
 ifeq ($(TYPE),major)
-	major=$(shell echo $major\+1 | bc)
+	major=$(shell expr $(tmp_major) + 1)
+else
+	major=$(tmp_major)
 endif
 ifeq ($(TYPE),minor)
-	minor=$(shell echo $minor\+1 | bc)
+	minor=$(shell expr $(tmp_minor) + 1)
+else
+	minor=$(tmp_minor)
 endif
 ifeq ($(TYPE),patch)
-	patch=$(shell echo $patch\+1 | bc)
+	patch=$(shell expr $(tmp_patch) + 1)
+else
+	patch=$(tmp_patch)
 endif
 
 NEW_VERSION=$(major).$(minor).$(patch)
@@ -26,7 +32,7 @@ build:
 
 docker: 
 	docker build -t ingresso-watcher:test 
-	docker run -e API_KEY $(KEY) --name ingresso-watcher -p 8080 -d ingresso-watcher:test
+	docker run -e API_KEY $(KEY) --name ingresso-watcher -p 7000 -d ingresso-watcher:test
 
 release: new-tag release-git release-docker
 
