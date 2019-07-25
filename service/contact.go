@@ -14,10 +14,10 @@ type ContactBody struct {
 	Name  string `json:"name"`
 }
 
-func AddNewContact(r repository.Interface, contact ContactBody, wpp client.WhatsAppInterface) {
+func AddNewContact(r repository.Interface, contact ContactBody, wpp client.WhatsAppInterface) error {
 	log.Printf("Salvando contato de %s", contact.Name)
 	r.Set(contact.Phone, contact.Name)
-	_ = SendGreetingsMessage(wpp, contact.Phone, contact.Name)
+	return SendGreetingsMessage(wpp, contact.Phone, contact.Name)
 }
 
 func ChangeContactName(r repository.Interface, phone, newName string) error {

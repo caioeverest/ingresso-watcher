@@ -19,7 +19,13 @@ func (h *BaseHandler) CreateContact(c *gin.Context) {
 		return
 	}
 
-	service.AddNewContact(h.ContactDB, body, h.WppClient)
+	if err := service.AddNewContact(h.ContactDB, body, h.WppClient); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": "Algum problema ocorreu",
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
