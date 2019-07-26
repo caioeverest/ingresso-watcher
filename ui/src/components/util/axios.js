@@ -3,7 +3,7 @@ import axios from 'axios'
 axios.defaults.baseURL = `${window.location.origin}/api`
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.withCredentials = false
-axios.defaults.timeout = 60000
+axios.defaults.timeout = 6000000
 
 export const setDefaultUrl = baseUrl => {
     axios.defaults.baseURL = baseUrl
