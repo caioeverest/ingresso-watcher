@@ -1,6 +1,5 @@
 ACTUAL_VERSION=$(shell git describe --tag --abbrev=0)
 TYPE?=patch
-DOCKER_USER=$(shell docker info | sed '/Username:/!d;s/.* //')
 KEY=1234
 
 y=$(subst ., ,$(ACTUAL_VERSION))
@@ -25,26 +24,29 @@ endif
 
 NEW_VERSION=$(major).$(minor).$(patch)
 
+release: test new-tag docker-build docker-push release-git 
+
 build: 
 	yarn install --modules-folder./ui
 	yarn build ./ui
 	go build -o ./ingresso-watcher cmd/main.go
 
-docker: 
-	docker build -t ingresso-watcher:test 
-	docker run -e API_KEY $(KEY) --name ingresso-watcher -p 7000 -d ingresso-watcher:test
-
-release: new-tag release-git release-docker
-
-release-git: 
-	git add .
-	git tag -a $(NEW_VERSION)
-	git commit -m "new release v$(NEW_VERSION)"
-	git push
-
-release-docker:
-	docker build . -t $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
-	docker push $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
+test:
+	go test ./...
 
 new-tag:
 	@echo "$(ACTUAL_VERSION) -> $(NEW_VERSION)"
+
+docker-build: 
+	docker build . -t $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
+
+docker-push:
+	docker push $(DOCKER_USER)/ingresso-watcher:$(NEW_VERSION) 
+
+release-git: 
+	git add .
+	git tag -a $(NEW_VERSION) -m "new release v$(NEW_VERSION)"
+	git commit -m "add changes"
+	git push --follow-tags
+
+

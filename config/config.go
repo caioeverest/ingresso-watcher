@@ -8,7 +8,7 @@ import (
 
 type Config struct {
 	Interval uint64
-	HttpPort int
+	HttpPort string
 	ApiKey   string
 }
 
@@ -19,10 +19,9 @@ func InitConfig() *Config {
 		interval, _ = strconv.ParseUint(tmpInterval, 10, 64)
 	}
 
-	HttpPort := 7000
-	tmpHttpPort, ok := os.LookupEnv("HTTP_PORT")
-	if ok {
-		httpPort, _ = strconv.Atoi(tmpHttpPort)
+	httpPort, ok := os.LookupEnv("HTTP_PORT")
+	if !ok {
+		httpPort = "7000"
 	}
 
 	apiKey, ok := os.LookupEnv("API_KEY")
@@ -32,6 +31,7 @@ func InitConfig() *Config {
 
 	confSetted := &Config{
 		Interval: interval,
+		HttpPort: httpPort,
 		ApiKey:   apiKey,
 	}
 
