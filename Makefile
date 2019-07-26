@@ -41,7 +41,6 @@ docker-push:
 release-git: 
 	git add .
 	git tag -a $(NEW_VERSION) -m "new release v$(NEW_VERSION)"
-	git commit -m "add changes"
 	git push --follow-tags
 
 
