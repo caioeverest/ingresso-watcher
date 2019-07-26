@@ -58,7 +58,7 @@ func main() {
 		api.POST("/notify", h.NotifyTest)
 	}
 
-	if err := app.Run(conf.HttpPort); err != nil {
+	if err := app.Run(":" + conf.HttpPort); err != nil {
 		log.Panicf("something goes wrong: %s", err)
 	}
 }
