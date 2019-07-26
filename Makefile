@@ -26,11 +26,6 @@ NEW_VERSION=$(major).$(minor).$(patch)
 
 release: test new-tag docker-build docker-push release-git 
 
-build: 
-	yarn install --modules-folder./ui
-	yarn build ./ui
-	go build -o ./ingresso-watcher cmd/main.go
-
 test:
 	go test ./...
 
