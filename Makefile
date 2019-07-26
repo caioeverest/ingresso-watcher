@@ -38,8 +38,8 @@ release: new-tag release-git release-docker
 
 release-git: 
 	git add .
+	git tag -a $(NEW_VERSION)
 	git commit -m "new release v$(NEW_VERSION)"
-	git tag -a $(NEW_VERSION) -m "release v$(NEW_VERSION)"
 	git push
 
 release-docker:
