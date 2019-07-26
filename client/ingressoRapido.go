@@ -12,7 +12,7 @@ import (
 
 func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 
-	url := fmt.Sprintf("https://bff-sales-api-cdn.ingressorapido.com.br/api/v1/events/%s", id)
+	url := fmt.Sprintf("https://%s/api/v1/events/%s", conf.ApiAddress, id)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

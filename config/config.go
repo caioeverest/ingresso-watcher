@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	Interval uint64
-	HttpPort string
-	ApiKey   string
+	Interval   uint64
+	HttpPort   string
+	ApiKey     string
+	ApiAddress string
 }
 
 func InitConfig() *Config {
@@ -29,10 +30,16 @@ func InitConfig() *Config {
 		log.Panicf("Did not found API_KEY")
 	}
 
+	apiAddress, ok := os.LookupEnv("API_ADDRESS")
+	if !ok {
+		log.Panicf("Did not found API_ADDRESS")
+	}
+
 	confSetted := &Config{
-		Interval: interval,
-		HttpPort: httpPort,
-		ApiKey:   apiKey,
+		Interval:   interval,
+		HttpPort:   httpPort,
+		ApiKey:     apiKey,
+		ApiAddress: apiAddress,
 	}
 
 	printConfig(confSetted)
