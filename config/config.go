@@ -7,10 +7,11 @@ import (
 )
 
 type Config struct {
-	Interval   uint64
-	HttpPort   string
-	ApiKey     string
-	ApiAddress string
+	Interval           uint64
+	HttpPort           string
+	ApiKey             string
+	ApiAddress         string
+	ApiFallBackAddress string
 }
 
 func InitConfig() *Config {
@@ -35,11 +36,17 @@ func InitConfig() *Config {
 		log.Panicf("Did not found API_ADDRESS")
 	}
 
+	apiFallBackAddress, ok := os.LookupEnv("API_FALLBACK_ADDRESS")
+	if !ok {
+		log.Panicf("Did not found API_FALL_BACK_ADDRESS")
+	}
+
 	confSetted := &Config{
-		Interval:   interval,
-		HttpPort:   httpPort,
-		ApiKey:     apiKey,
-		ApiAddress: apiAddress,
+		Interval:           interval,
+		HttpPort:           httpPort,
+		ApiKey:             apiKey,
+		ApiAddress:         apiAddress,
+		ApiFallBackAddress: apiFallBackAddress,
 	}
 
 	printConfig(confSetted)
@@ -49,5 +56,8 @@ func InitConfig() *Config {
 
 func printConfig(c *Config) {
 	log.Printf("interval: %d", c.Interval)
+	log.Printf("http port: %d", c.HttpPort)
 	log.Printf("api-key: %s", c.ApiKey)
+	log.Printf("api-url: %s", c.ApiAddress)
+	log.Printf("api-fall back: %s", c.ApiFallBackAddress)
 }

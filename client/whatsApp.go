@@ -37,7 +37,17 @@ func (wpp *WppConnection) Send(phoneNumber, text string) (string, error) {
 		},
 		Text: text,
 	}
-	return wpp.conn.Send(message)
+	resp, err := wpp.conn.Send(message)
+	if err != nil {
+		if session, err := readSession(); err == nil {
+			if session, err = wpp.conn.RestoreWithSession(session); err != nil {
+				return nil, fmt.Errorf("restoring failed: %v\n", err)
+			}
+		}
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func login(wac *whatsapp.Conn) error {

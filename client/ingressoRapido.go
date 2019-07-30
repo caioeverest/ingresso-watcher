@@ -13,6 +13,7 @@ import (
 func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 
 	url := fmt.Sprintf("https://%s/api/v1/events/%s", conf.ApiAddress, id)
+	fallBackUrl := fmt.Sprintf("https://%s/api/v1/events/%s", conf.ApiFallBackAddress, id)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -25,6 +26,11 @@ func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if err := res.fallBack(fallBackUrl); err != nil {
+		return nil, err
+	}
+
 	if err := successStatusCode(res.StatusCode); err != nil {
 		return nil, err
 	}
@@ -51,4 +57,24 @@ func successStatusCode(code int) error {
 		return nil
 	}
 	return errors.New(fmt.Sprintf("Request receive HTTP status %d", code))
+}
+
+func (res *http.Response) fallBack(fallBackUrl string) error {
+	if res.StatusCode != 404 {
+		return nil
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("x-api-key", conf.ApiKey)
+
+	res, err = http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
