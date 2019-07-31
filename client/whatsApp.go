@@ -43,6 +43,8 @@ func (wpp *WppConnection) Send(phoneNumber, text string) (string, error) {
 			if session, err = wpp.conn.RestoreWithSession(session); err != nil {
 				return nil, fmt.Errorf("restoring failed: %v\n", err)
 			}
+
+			return wpp.conn.Send(message)
 		}
 		return nil, err
 	}
