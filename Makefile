@@ -8,11 +8,14 @@ tmp_minor=$(word 2, $(y))
 tmp_patch=$(word 3, $(y))
 ifeq ($(TYPE),major)
 	major=$(shell expr $(tmp_major) + 1)
+	minor=0
+	patch=0
 else
 	major=$(tmp_major)
 endif
 ifeq ($(TYPE),minor)
 	minor=$(shell expr $(tmp_minor) + 1)
+	patch=0
 else
 	minor=$(tmp_minor)
 endif
