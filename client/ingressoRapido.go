@@ -13,7 +13,10 @@ import (
 
 func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 
-	url := selectApi(id)
+	url, err := selectApi(id)
+	if err != nil {
+		return nil, err
+	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -55,17 +58,21 @@ func successStatusCode(code int) error {
 	return errors.New(fmt.Sprintf("Request receive HTTP status %d", code))
 }
 
-func selectApi(code string) string {
+func selectApi(code string) (string, error) {
 	spliter := strings.Split(code, "-")
+	if len(spliter) < 2 {
+		return "", errors.New(fmt.Sprintf("Unable to find api ref"))
+	}
+
 	apiRef := spliter[1]
 	id := spliter[0]
 
 	switch apiRef {
 	case "1":
-		return fmt.Sprintf("https://bff-sales-api-cdn.ingressorapido.com.br/api/v1/events/%s", id)
+		return fmt.Sprintf("https://bff-sales-api-cdn.ingressorapido.com.br/api/v1/events/%s", id), nil
 	case "2":
-		return fmt.Sprintf("https://bff-sales-api-cdn.bileto.sympla.com.br/api/v1/events/%s", id)
+		return fmt.Sprintf("https://bff-sales-api-cdn.bileto.sympla.com.br/api/v1/events/%s", id), nil
 	default:
-		return ""
+		return "", errors.New(fmt.Sprintf("Api ref not acceptable %s", apiRef))
 	}
 }
