@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/caioeverest/ingresso-watcher/config"
 )
 
 func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 
-	url := fmt.Sprintf("https://%s/api/v1/events/%s", conf.ApiAddress, id)
-	fallBackUrl := fmt.Sprintf("https://%s/api/v1/events/%s", conf.ApiFallBackAddress, id)
+	url := selectApi(id)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -24,10 +24,6 @@ func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
-	}
-
-	if err := res.fallBack(fallBackUrl); err != nil {
 		return nil, err
 	}
 
@@ -59,22 +55,17 @@ func successStatusCode(code int) error {
 	return errors.New(fmt.Sprintf("Request receive HTTP status %d", code))
 }
 
-func (res *http.Response) fallBack(fallBackUrl string) error {
-	if res.StatusCode != 404 {
-		return nil
-	}
+func selectApi(code string) string {
+	spliter := strings.Split(code, "-")
+	apiRef := spliter[1]
+	id := spliter[0]
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return err
+	switch apiRef {
+	case "1":
+		return fmt.Sprintf("https://bff-sales-api-cdn.ingressorapido.com.br/api/v1/events/%s", id)
+	case "2":
+		return fmt.Sprintf("https://bff-sales-api-cdn.bileto.sympla.com.br/api/v1/events/%s", id)
+	default:
+		return ""
 	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("x-api-key", conf.ApiKey)
-
-	res, err = http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

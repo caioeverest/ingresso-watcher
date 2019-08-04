@@ -115,7 +115,7 @@ func CheckIfHaveTickets(conf *config.Config, id string) (map[string]string, erro
 
 		if qtdAvaiable > 0 {
 			name := item["name"].(string)
-			url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s-1", id)
+			url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s", id)
 			res[name] = url
 		}
 	}
