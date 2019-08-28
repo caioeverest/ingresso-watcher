@@ -54,7 +54,6 @@ func main() {
 			event.DELETE("/:id", h.DeleteEvent)
 		}
 
-		api.GET("/test-event", h.TestEvent)
 		api.POST("/notify", h.NotifyTest)
 	}
 

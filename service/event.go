@@ -23,6 +23,12 @@ type BaseDataFromEventResponse struct {
 	Date        time.Time `json:"date"`
 }
 
+type EventFoundPayload struct {
+	Name   string `json:"name"`
+	Url    string `json:"url"`
+	Status string `json:"status"`
+}
+
 func SaveNewEvent(r repository.Interface, event EventBody) {
 	log.Printf("Salvando evento %s", event.Name)
 	r.Set(event.Id, event.Name)
@@ -69,60 +75,25 @@ func StopWatchEvent(r repository.Interface, id string) error {
 	return nil
 }
 
-func TestEvent(conf *config.Config, id string) ([]BaseDataFromEventResponse, error) {
-	events, err := client.GetEventById(conf, id)
-	if err != nil {
-		return nil, err
-	}
-
-	var res []BaseDataFromEventResponse
-	for _, i := range events {
-		item := i.(map[string]interface{})
-		localDate, err := time.Parse(time.RFC3339, item["presentation_local_date_time"].(string))
-		if err != nil {
-			return nil, err
-		}
-		irItem := BaseDataFromEventResponse{
-			Id:          item["id"].(float64),
-			Name:        item["name"].(string),
-			QtdAvaiable: item["total_available"].(float64),
-			Date:        localDate,
-		}
-		if irItem.Date.After(time.Now()) {
-			res = append(res, irItem)
-		}
-	}
-
-	if len(res) <= 0 {
-		return nil, errors.LateEvent
-	}
-
-	return res, nil
-}
-
-func CheckIfHaveTickets(conf *config.Config, id string) (map[string]string, error) {
-	events, err := client.GetEventById(conf, id)
+func CheckIfHaveTickets(conf *config.Config, id string) (*EventFoundPayload, error) {
+	payload, err := client.GetEventById(conf, id)
 	if err != nil {
 		log.Print(err)
 		return nil, err
 	}
 
-	res := make(map[string]string)
-
-	for _, i := range events {
-		item := i.(map[string]interface{})
-		qtdAvaiable := item["total_available"].(float64)
-
-		if qtdAvaiable > 0 {
-			name := item["name"].(string)
-			url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s", id)
-			res[name] = url
-		}
-	}
-
-	if len(res) <= 0 {
+	event := payload.(map[string]interface{})
+	status, ok := event["status"].(string)
+	if ok && status == "SOLD_OUT" {
 		return nil, errors.NoTickets
 	}
 
-	return res, nil
+	name, ok := event["name"].(string)
+	url := fmt.Sprintf("https://www.ingressorapido.com.br/event/%s", id)
+
+	return &EventFoundPayload{
+		Name:   name,
+		Url:    url,
+		Status: status,
+	}, nil
 }

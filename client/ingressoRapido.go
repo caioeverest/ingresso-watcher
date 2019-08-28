@@ -11,7 +11,7 @@ import (
 	"github.com/caioeverest/ingresso-watcher/config"
 )
 
-func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
+func GetEventById(conf *config.Config, id string) (interface{}, error) {
 
 	url, err := selectApi(id)
 	if err != nil {
@@ -45,10 +45,11 @@ func GetEventById(conf *config.Config, id string) ([]interface{}, error) {
 		return nil, err
 	}
 
-	presentations := decoded["data"].(map[string]interface{})["presentations"]
-	items := presentations.(map[string]interface{})["items"].([]interface{})
+	//presentations := decoded["data"].(map[string]interface{})["presentations"]
+	//items := presentations.(map[string]interface{})["items"].([]interface{})
+	e := decoded["data"].(map[string]interface{})
 
-	return items, nil
+	return e, nil
 }
 
 func successStatusCode(code int) error {

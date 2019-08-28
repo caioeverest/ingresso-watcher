@@ -117,28 +117,3 @@ func (h *BaseHandler) DeleteEvent(c *gin.Context) {
 		"message": fmt.Sprintf("Evento id %s deletado com sucesso!", id),
 	})
 }
-
-func (h *BaseHandler) TestEvent(c *gin.Context) {
-	id := c.Query("id")
-	if id == "" {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "empty field \"id\"",
-		})
-		return
-	}
-
-	items, err := service.TestEvent(h.Config, id)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusFailedDependency, gin.H{
-			"code":    http.StatusFailedDependency,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": items,
-	})
-}
